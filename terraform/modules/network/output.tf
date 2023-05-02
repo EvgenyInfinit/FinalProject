@@ -6,6 +6,6 @@ output "public-subnet-id"{
     value = aws_subnet.public.*.id
 }
 
-output "private-subnet-id"{
-    value = aws_subnet.private.*.id
-}
+# output "private-subnet-id"{
+#     value = aws_subnet.private.*.id
+# }
