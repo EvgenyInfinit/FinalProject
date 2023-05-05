@@ -17,7 +17,7 @@ resource "aws_vpc" "evgy_vpc" {
 #####################################
 
 resource "aws_subnet" "public" {
-  count      = 1 #2
+  count      = 2
   vpc_id     = aws_vpc.evgy_vpc.id
   cidr_block = var.public_subnet[count.index]
   availability_zone = data.aws_availability_zones.available.names[count.index]
@@ -27,19 +27,19 @@ resource "aws_subnet" "public" {
   }
 }
 
-# ####################################
-# #private subnets
-# ###################################
+####################################
+#private subnets
+###################################
 
-# resource "aws_subnet" "private" {
-#   count      = 2
-#   vpc_id     = aws_vpc.evgy_vpc.id
-#   cidr_block = var.private_subnet[count.index]
-#   availability_zone = data.aws_availability_zones.available.names[count.index]
-#   tags = {
-#     Name = "FP Private Subnet_${count.index}"
-#   }
-# }
+resource "aws_subnet" "private" {
+  count      = 2
+  vpc_id     = aws_vpc.evgy_vpc.id
+  cidr_block = var.private_subnet[count.index]
+  availability_zone = data.aws_availability_zones.available.names[count.index]
+  tags = {
+    Name = "FP Private Subnet_${count.index}"
+  }
+}
 
 ###################
 #internet gateway
@@ -60,7 +60,7 @@ resource "aws_internet_gateway" "ing" {
 ##########################
 resource "aws_eip" "nat_eip" {
    vpc = true
-   count = 1 #2
+   count = 2
    depends_on = [aws_internet_gateway.ing]
    tags = {
     Name = "FP NAT gateway EIP"
@@ -75,7 +75,7 @@ resource "aws_eip" "nat_eip" {
 ###################################
 
 resource "aws_nat_gateway" "nat_gw" {
-  count = 1 #2
+  count = 2
   allocation_id = aws_eip.nat_eip.*.id[count.index]
   subnet_id     = aws_subnet.public.*.id[count.index]
   tags = {
@@ -100,28 +100,28 @@ resource "aws_route_table" "public" {
   }
 }
 resource "aws_route_table_association" "public" {
-  count = 1 #2 
+  count = 2 
   subnet_id      = aws_subnet.public.*.id[count.index]
   route_table_id = aws_route_table.public.id
 }
 
 
-# resource "aws_route_table" "private" {
-#   count = 2
-#   vpc_id = aws_vpc.evgy_vpc.id
-#   route {
-#      cidr_block = "0.0.0.0/0"
-#      gateway_id = aws_nat_gateway.nat_gw.*.id[count.index]
-#      }
-#   tags = {
-#     "Name" = "private route table"
-#   }
-# }
-# resource "aws_route_table_association" "private" {
-#   count = 2
-#   subnet_id      = aws_subnet.private.*.id[count.index]
-#   route_table_id = aws_route_table.private.*.id[count.index]
-# }
+resource "aws_route_table" "private" {
+  count = 2
+  vpc_id = aws_vpc.evgy_vpc.id
+  route {
+     cidr_block = "0.0.0.0/0"
+     gateway_id = aws_nat_gateway.nat_gw.*.id[count.index]
+     }
+  tags = {
+    "Name" = "FP private route table"
+  }
+}
+resource "aws_route_table_association" "private" {
+  count = 2
+  subnet_id      = aws_subnet.private.*.id[count.index]
+  route_table_id = aws_route_table.private.*.id[count.index]
+}
 
 #######################################
 #create instance profile
