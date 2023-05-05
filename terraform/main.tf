@@ -1,8 +1,8 @@
 
-module "ssh_keys" {
-  source   = "./modules/ssh_keys"
-  key_pair = var.key_pair_names
-}
+# module "ssh_keys" {
+#   source   = "./modules/ssh_keys"
+#   key_pair = var.key_pair_names
+# }
 
 
 module "networking" {
@@ -28,11 +28,18 @@ module "jenkins" {
   # consul_join_policy_arn= module.consul.consul_join_policy_arn
 } 
 */
-
-module "monitoring" {
-  source    = "./modules/monitor"
-  # region = var.region
+module "k8s" {
+  source    = "./modules/k8s"
   vpc_id = module.networking.vpcid
-  subnet_id = module.networking.public-subnet-id[0]
-  server_public_key = module.ssh_keys.servers_key[0]
- } 
+  region = var.region
+  subnet_ids = module.networking.private_subnet_id
+  #role_arn  = module.jenkins.jenkins_role_arn
+  #role_name = module.jenkins.jenkins_role_name
+}
+# module "monitoring" {
+#   source    = "./modules/monitor"
+#   # region = var.region
+#   vpc_id = module.networking.vpcid
+#   subnet_id = module.networking.public-subnet-id[0]
+#   server_public_key = module.ssh_keys.servers_key[0]
+#  } 

@@ -49,7 +49,7 @@ resource "aws_subnet" "private" {
 resource "aws_internet_gateway" "ing" {
    vpc_id     = aws_vpc.evgy_vpc.id
    tags = {
-    Name = "Public Subnet"
+    Name = "FP Public Subnet"
   }
 }
 
@@ -63,7 +63,7 @@ resource "aws_eip" "nat_eip" {
    count = 2
    depends_on = [aws_internet_gateway.ing]
    tags = {
-    Name = "NAT gateway EIP"
+    Name = "FP NAT gateway EIP"
     }
 }
 
@@ -79,7 +79,7 @@ resource "aws_nat_gateway" "nat_gw" {
   allocation_id = aws_eip.nat_eip.*.id[count.index]
   subnet_id     = aws_subnet.public.*.id[count.index]
   tags = {
-    Name = "gw_NAT_${count.index}"
+    Name = "FP gw_NAT_${count.index}"
   }
   depends_on = [aws_internet_gateway.ing]
 }
@@ -96,11 +96,11 @@ resource "aws_route_table" "public" {
      gateway_id = aws_internet_gateway.ing.id
      }
   tags = {
-    "Name" = "public route table"
+    "Name" = "FP public route table"
   }
 }
 resource "aws_route_table_association" "public" {
-  count = 2
+  count = 2 
   subnet_id      = aws_subnet.public.*.id[count.index]
   route_table_id = aws_route_table.public.id
 }
@@ -114,7 +114,7 @@ resource "aws_route_table" "private" {
      gateway_id = aws_nat_gateway.nat_gw.*.id[count.index]
      }
   tags = {
-    "Name" = "private route table"
+    "Name" = "FP private route table"
   }
 }
 resource "aws_route_table_association" "private" {
