@@ -90,8 +90,8 @@ resource "aws_instance" "jenkins_server" {
                   role = "jenkins_master"
                   port = "8080"
                 }
-  #associate_public_ip_address       = false
-  vpc_security_group_ids = [aws_security_group.jenkins.id] #,  var.vpn_sg, var.consul_security_group]
+  associate_public_ip_address       = false
+  vpc_security_group_ids = [aws_security_group.jenkins.id,  var.vpn_sg] #, var.consul_security_group]
   /* iam_instance_profile = [aws_iam_instance_profile.jenkins-role.name, var.consul_iam_instance_profile] */
   iam_instance_profile =  aws_iam_instance_profile.jenkins-role.name
   user_data = file("modules/jenkins/scripts/jenkins_server.tpl") 
@@ -112,7 +112,7 @@ resource "aws_instance" "jenkins_node" {
          port = "8080"
          }  
   associate_public_ip_address       = false
-  vpc_security_group_ids = [aws_security_group.jenkins.id] #, var.vpn_sg, var.consul_security_group]
+  vpc_security_group_ids = [aws_security_group.jenkins.id, var.vpn_sg] #, var.consul_security_group]
   user_data = file("modules/jenkins/scripts/jenkins-agent.tpl")
   iam_instance_profile =  aws_iam_instance_profile.jenkins-role.name
 }

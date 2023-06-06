@@ -1,10 +1,19 @@
+output "vpc_id" {
+  value = module.networking.vpcid
+}
+
+
+output "vpn_access_url" {
+  value = module.vpn.access_vpn_url
+}
+
 # output "monitor_server_public_ip" {
 #   value = module.monitoring.monitor_server_public_ip
 # }
 
-output "servers_key" {
-  value = module.ssh_keys.servers_key
-}
+# output "servers_key" {
+#   value = module.ssh_keys.servers_key
+# }
 
 # output "k8s_cluster_id" {
 #   description = "EKS cluster ID."

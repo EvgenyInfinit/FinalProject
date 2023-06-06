@@ -4,6 +4,15 @@ module "ssh_keys" {
   key_pair = var.key_pair_names
 }
 
+module "vpn" {
+  source    = "./modules/vpn"
+  vpc_id = module.networking.vpcid
+  subnet_id = module.networking.public_subnet_id
+  server_public_key = module.ssh_keys.servers_key[2]
+  servers_private_key = module.ssh_keys.servers_private_key[2]
+  availability_zone = var.availability_zone[0]
+}
+
 module "networking" {
   source    = "./modules/network"
   region = var.region
@@ -15,11 +24,11 @@ module "networking" {
 module "jenkins" {
   source    = "./modules/jenkins"
   vpc_id = module.networking.vpcid
-  # vpn_sg = module.vpn.vpn_sg
-  server_public_key = module.ssh_keys.servers_key[0]
-  servers_private_key = module.ssh_keys.servers_private_key[0]
-  # subnet_id = module.networking.private-subnet-id
-  subnet_id = module.networking.public_subnet_id
+  vpn_sg = module.vpn.vpn_sg
+  server_public_key = module.ssh_keys.servers_key[1]
+  servers_private_key = module.ssh_keys.servers_private_key[1]
+  subnet_id = module.networking.private_subnet_id
+  #subnet_id = module.networking.public_subnet_id
   availability_zone = var.availability_zone
   ami = var.ami
   region = var.region
