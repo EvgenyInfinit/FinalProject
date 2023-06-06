@@ -8,7 +8,7 @@ variable "server_public_key" {}
 
 variable "servers_private_key" {}
 
-#variable "vpn_sg" {}
+variable "vpn_sg" {}
 
 variable "ami" {}
 
