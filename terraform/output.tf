@@ -41,3 +41,8 @@ output "Jenkins_server" {
 output "jenkins_agent" {
   value = module.jenkins.jenkins_agent
 }
+
+
+output "consul_servers" {
+  value       = module.consul.consul_servers
+}
