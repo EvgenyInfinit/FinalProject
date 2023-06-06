@@ -10,6 +10,6 @@ variable "region" {
 variable "key_pair_names" {
   description = "EC2 Key pair names, "
   type = list(string)
-  default = [ "monitor_key"]
+  default = [ "jenkins_key"]
   #default = ["consul_key", "jenkins_key", "vpn_key", "monitor_key","logging_key" ]
 }

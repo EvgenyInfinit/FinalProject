@@ -59,7 +59,8 @@ resource "aws_internet_gateway" "ing" {
 # - NAT gateway in a public subnet and must associate an elastic IP address with the NAT gateway at creation.
 ##########################
 resource "aws_eip" "nat_eip" {
-   vpc = true
+   #vpc = true
+   domain = "vpc"
    count = 2
    depends_on = [aws_internet_gateway.ing]
    tags = {
