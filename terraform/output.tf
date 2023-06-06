@@ -2,9 +2,9 @@
 #   value = module.monitoring.monitor_server_public_ip
 # }
 
-# output "servers_key" {
-#   value = module.ssh_keys.servers_key
-# }
+output "servers_key" {
+  value = module.ssh_keys.servers_key
+}
 
 # output "k8s_cluster_id" {
 #   description = "EKS cluster ID."
@@ -23,3 +23,12 @@
 # output "k8s_cluster_name" {
 #   value = module.k8s.cluster_name
 # } 
+
+
+output "Jenkins_server" {
+  value = module.jenkins.Jenkins_server
+}
+
+output "jenkins_agent" {
+  value = module.jenkins.jenkins_agent
+}

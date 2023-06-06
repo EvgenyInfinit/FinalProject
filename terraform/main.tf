@@ -12,20 +12,21 @@ module "networking" {
   #elastic_target_group_arn = module.elastic.elastic_target_group_arn
  } 
 
-# module "jenkins" {
-#   source    = "./modules/jenkins"
-#   vpc_id = module.networking.vpcid
-#   # vpn_sg = module.vpn.vpn_sg
-#   # server_public_key = module.ssh_keys.servers_key[1]
-#   # servers_private_key = module.ssh_keys.servers_private_key[1]
-#   # subnet_id = module.networking.private-subnet-id
-#   # availability_zone = var.availability_zone
-#   # ami = var.ami
-#   region = var.region
-#   # consul_iam_instance_profile = module.consul.aws_iam_instance_profile
-#   # consul_security_group = module.consul.consul_security_group_id
-#   # consul_join_policy_arn= module.consul.consul_join_policy_arn
-# } 
+module "jenkins" {
+  source    = "./modules/jenkins"
+  vpc_id = module.networking.vpcid
+  # vpn_sg = module.vpn.vpn_sg
+  server_public_key = module.ssh_keys.servers_key[0]
+  servers_private_key = module.ssh_keys.servers_private_key[0]
+  # subnet_id = module.networking.private-subnet-id
+  subnet_id = module.networking.public_subnet_id
+  availability_zone = var.availability_zone
+  ami = var.ami
+  region = var.region
+  # consul_iam_instance_profile = module.consul.aws_iam_instance_profile
+  # consul_security_group = module.consul.consul_security_group_id
+  # consul_join_policy_arn= module.consul.consul_join_policy_arn
+} 
 
 
 
