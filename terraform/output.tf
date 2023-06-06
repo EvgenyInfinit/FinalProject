@@ -46,3 +46,11 @@ output "jenkins_agent" {
 output "consul_servers" {
   value       = module.consul.consul_servers
 }
+
+output "elastic_server_address" {
+  value = module.elastic.elastic_server_host_id
+  }
+
+output "kibana_url" {
+  value = module.elastic.kibana_url
+  }

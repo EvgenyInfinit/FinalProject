@@ -58,10 +58,15 @@ module "consul" {
 #   #role_name = module.jenkins.jenkins_role_name
 # }
 
-# module "monitoring" {
-#   source    = "./modules/monitor"
-#   # region = var.region
-#   vpc_id = module.networking.vpcid
-#   subnet_id = module.networking.public-subnet-id[0]
-#   server_public_key = module.ssh_keys.servers_key[0]
-#  } 
+ module "elastic" {
+  source    = "./modules/elastic"
+  vpc_id = module.networking.vpcid
+  subnet_id = module.networking.private_subnet_id
+  server_public_key = module.ssh_keys.servers_key[4]
+  servers_private_key = module.ssh_keys.servers_private_key[4]
+  availability_zone = var.availability_zone[0] 
+  ami = var.ami
+  region = var.region
+  consul_iam_instance_profile = module.consul.aws_iam_instance_profile
+  consul_security_group = module.consul.consul_security_group_id
+   }
