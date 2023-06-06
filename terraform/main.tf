@@ -16,8 +16,8 @@ module "vpn" {
 module "networking" {
   source    = "./modules/network"
   region = var.region
-  #consul_target_group_arn = module.consul.consul-server-target-group-arn
-  #jenkins_target_group_arn = module.jenkins.jenkins-server-target-group-arn
+  #consul_target_group_arn = module.consul.consul_server_target_group_arn
+  #jenkins_target_group_arn = module.jenkins.jenkins_server_target_group_arn
   #elastic_target_group_arn = module.elastic.elastic_target_group_arn
  } 
 
@@ -37,7 +37,17 @@ module "jenkins" {
   # consul_join_policy_arn= module.consul.consul_join_policy_arn
 } 
 
-
+module "consul" {
+  source    = "./modules/consul"
+  vpc_id = module.networking.vpcid
+  vpn_sg = module.vpn.vpn_sg
+  subnet_id = module.networking.private_subnet_id
+  server_public_key = module.ssh_keys.servers_key[0]
+  servers_private_key = module.ssh_keys.servers_private_key[0]
+  availability_zone = var.availability_zone
+  ami = var.ami
+  region = var.region
+}
 
 # module "k8s" {
 #   source    = "./modules/k8s"
