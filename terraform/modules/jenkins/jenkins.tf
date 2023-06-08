@@ -91,7 +91,7 @@ resource "aws_instance" "jenkins_server" {
                   port = "8080"
                 }
   associate_public_ip_address       = false
-  vpc_security_group_ids = [aws_security_group.jenkins.id,  var.vpn_sg] #, var.consul_security_group]
+  vpc_security_group_ids = [aws_security_group.jenkins.id,  var.vpn_sg, var.consul_security_group]
   /* iam_instance_profile = [aws_iam_instance_profile.jenkins-role.name, var.consul_iam_instance_profile] */
   iam_instance_profile =  aws_iam_instance_profile.jenkins-role.name
   user_data = file("modules/jenkins/scripts/jenkins_server.tpl") 
@@ -112,12 +112,12 @@ resource "aws_instance" "jenkins_node" {
          port = "8080"
          }  
   associate_public_ip_address       = false
-  vpc_security_group_ids = [aws_security_group.jenkins.id, var.vpn_sg] #, var.consul_security_group]
+  vpc_security_group_ids = [aws_security_group.jenkins.id, var.vpn_sg, var.consul_security_group]
   user_data = file("modules/jenkins/scripts/jenkins-agent.tpl")
   iam_instance_profile =  aws_iam_instance_profile.jenkins-role.name
 }
  
-resource "aws_alb_target_group" "jenkins-server" {
+resource "aws_alb_target_group" "jenkins_server" {
   name     = "jenkins-server-target-group"
   port     = 8080
   protocol = "HTTP"
@@ -133,9 +133,9 @@ resource "aws_alb_target_group" "jenkins-server" {
   } */
 }
 
-resource "aws_alb_target_group_attachment" "jenkins-server" {
+resource "aws_alb_target_group_attachment" "jenkins_server" {
   count = 1
-  target_group_arn = aws_alb_target_group.jenkins-server.arn
+  target_group_arn = aws_alb_target_group.jenkins_server.arn
   target_id        = aws_instance.jenkins_server.*.id[count.index]
   port             = 8080
 }
