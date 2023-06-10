@@ -176,54 +176,54 @@ resource "aws_security_group" "alb1_sg" {
   }
 }
 
-# resource "aws_route53_record" "jenkins_record" {
-#   zone_id = data.aws_route53_zone.primary_domain.zone_id
-#   name    = "jenkins"
-#   type    = "CNAME"
-#   ttl     = "300"
-#   records = [aws_alb.alb1.dns_name]
-# }
+resource "aws_route53_record" "jenkins_record" {
+  zone_id = data.aws_route53_zone.primary_domain.zone_id
+  name    = "jenkins"
+  type    = "CNAME"
+  ttl     = "300"
+  records = [aws_alb.alb1.dns_name]
+}
 
-# resource "aws_route53_record" "consul_record" {
-#   zone_id = data.aws_route53_zone.primary_domain.zone_id
-#   name    = "consul"
-#   type    = "CNAME"
-#   ttl     = "300"
-#   records = [aws_alb.alb1.dns_name]
-# }  
+resource "aws_route53_record" "consul_record" {
+  zone_id = data.aws_route53_zone.primary_domain.zone_id
+  name    = "consul"
+  type    = "CNAME"
+  ttl     = "300"
+  records = [aws_alb.alb1.dns_name]
+}  
 
-# resource "aws_route53_record" "kandula_record" {
-#   zone_id = data.aws_route53_zone.primary_domain.zone_id
-#   name    = "kandula"
-#   type    = "CNAME"
-#   ttl     = "300"
-#   records = [aws_alb.alb1.dns_name]
-# }  
+resource "aws_route53_record" "kandula_record" {
+  zone_id = data.aws_route53_zone.primary_domain.zone_id
+  name    = "kandula"
+  type    = "CNAME"
+  ttl     = "300"
+  records = [aws_alb.alb1.dns_name]
+}  
 
-# resource "aws_route53_record" "grafana_record" {
-#   zone_id = data.aws_route53_zone.primary_domain.zone_id
-#   name    = "grafana"
-#   type    = "CNAME"
-#   ttl     = "300"
-#   records = [aws_alb.alb1.dns_name]
-# }
+resource "aws_route53_record" "grafana_record" {
+  zone_id = data.aws_route53_zone.primary_domain.zone_id
+  name    = "grafana"
+  type    = "CNAME"
+  ttl     = "300"
+  records = [aws_alb.alb1.dns_name]
+}
 
-# resource "aws_route53_record" "elasticsearch_record" {
-#   zone_id = data.aws_route53_zone.primary_domain.zone_id
-#   name    = "elasticsearch"
-#   type    = "CNAME"
-#   ttl     = "300"
-#   records = [aws_alb.alb1.dns_name]
-# }
+resource "aws_route53_record" "elasticsearch_record" {
+  zone_id = data.aws_route53_zone.primary_domain.zone_id
+  name    = "elasticsearch"
+  type    = "CNAME"
+  ttl     = "300"
+  records = [aws_alb.alb1.dns_name]
+}
 
 
-# resource "aws_route53_record" "prometheus_record" {
-#   zone_id = data.aws_route53_zone.primary_domain.zone_id
-#   name    = "prometheus"
-#   type    = "CNAME"
-#   ttl     = "300"
-#   records = [aws_alb.alb1.dns_name]
-# }
+resource "aws_route53_record" "prometheus_record" {
+  zone_id = data.aws_route53_zone.primary_domain.zone_id
+  name    = "prometheus"
+  type    = "CNAME"
+  ttl     = "300"
+  records = [aws_alb.alb1.dns_name]
+}
 #######################################
 #create instance profile
 # !!! !!!
@@ -235,3 +235,21 @@ resource "aws_iam_instance_profile" "web_profile" {
 ###########################
 # Create Certificate 
 ###########################
+resource "aws_acm_certificate" "cert" {
+  domain_name       = "*.evgy.net"
+  validation_method = "EMAIL"
+  tags = {
+    Name = "certificate-opps"
+  }
+}
+data "aws_route53_zone" "primary_domain" {
+  name         = "evgy.net"
+  private_zone = false
+}
+# resource "aws_route53_zone" "primary_domain" {
+#   name         = "ops.evgy.com"
+#   #private_zone = false
+# }
+resource "aws_acm_certificate_validation" "cert" {
+  certificate_arn = aws_acm_certificate.cert.arn
+}

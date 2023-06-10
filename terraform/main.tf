@@ -54,8 +54,8 @@ module "k8s" {
   vpc_id = module.networking.vpcid
   region = var.region
   subnet_ids = module.networking.private_subnet_id
-  #role_arn  = module.jenkins.jenkins_role_arn
-  #role_name = module.jenkins.jenkins_role_name
+  role_arn  = module.jenkins.jenkins_role_arn
+  role_name = module.jenkins.jenkins_role_name
 }
 
  module "elastic" {

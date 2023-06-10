@@ -42,11 +42,49 @@ module "eks" {
   }
 }
 
-# data "aws_eks_cluster" "eks" {
-#   name = module.eks.cluster_name
-# }
+data "aws_eks_cluster" "eks" {
+  name = module.eks.cluster_id
+}
 
-# data "aws_eks_cluster_auth" "eks" {
-#   name = module.eks.cluster_name
-# }
+data "aws_eks_cluster_auth" "eks" {
+  name = module.eks.cluster_id
+}
 
+module "iam_assumable_role_admin" {
+  source                        = "terraform-aws-modules/iam/aws//modules/iam-assumable-role-with-oidc"
+  version                       = "~> 4.7.0"
+  create_role                   = true
+  role_name                     = "opsschool-role"
+  provider_url                  = replace(module.eks.cluster_oidc_issuer_url, "https://", "")
+  role_policy_arns              = ["arn:aws:iam::aws:policy/AmazonEC2FullAccess"]
+  oidc_fully_qualified_subjects = ["system:serviceaccount:${local.k8s_service_account_namespace}:${local.k8s_service_account_name}"]
+  depends_on = [module.eks]
+}
+
+provider "kubernetes" {
+  host                   = data.aws_eks_cluster.eks.endpoint
+  cluster_ca_certificate = base64decode(data.aws_eks_cluster.eks.certificate_authority[0].data)
+  token                  = data.aws_eks_cluster_auth.eks.token
+}
+
+# # add Jenkins IAM role to EKS cluster
+
+locals {
+map_roles = [
+    {
+      rolearn  = var.role_arn
+      username = var.role_name
+      groups   = ["system:masters"]
+    },
+  ]
+}
+
+module "eks_auth" {
+  source                   = "aidanmelen/eks-auth/aws"
+  version                  = "1.0.0"
+  eks                      = module.eks
+  wait_for_cluster_timeout = 300
+  map_roles                = local.map_roles
+
+  depends_on = [module.eks]
+}
