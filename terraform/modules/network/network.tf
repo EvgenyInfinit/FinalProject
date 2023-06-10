@@ -138,6 +138,46 @@ resource "aws_alb" "alb1" {
     Name = "application load balancer"
   }
 }
+
+resource "aws_alb_listener" "consul" {
+  #depends_on = [time_sleep.wait_for_certificate_verification] 
+  load_balancer_arn = aws_alb.alb1.arn
+   certificate_arn = aws_acm_certificate.cert.arn 
+  port              = "8500"
+  protocol          = "HTTPS"
+  default_action {
+    type             = "forward"
+    target_group_arn = var.consul_target_group_arn
+  }
+}  
+
+resource "aws_alb_listener" "jenkins" {
+   # depends_on = [time_sleep.wait_for_certificate_verification]  
+  load_balancer_arn = aws_alb.alb1.arn
+  certificate_arn = aws_acm_certificate.cert.arn 
+  port              = "443"
+  protocol          = "HTTPS"
+
+  default_action {
+    type             = "forward"
+    target_group_arn = var.jenkins_target_group_arn
+  }
+}
+
+
+resource "aws_alb_listener" "elastic" {
+   # depends_on = [time_sleep.wait_for_certificate_verification]  
+  load_balancer_arn = aws_alb.alb1.arn
+  certificate_arn = aws_acm_certificate.cert.arn 
+  port              = "5601"
+  protocol          = "HTTPS"
+
+  default_action {
+    type             = "forward"
+    target_group_arn = var.elastic_target_group_arn
+  }
+}
+
 ###########################
  ## APB security group
 ###########################
