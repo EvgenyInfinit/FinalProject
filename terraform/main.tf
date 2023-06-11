@@ -16,9 +16,9 @@ module "vpn" {
 module "networking" {
   source    = "./modules/network"
   region = var.region
-  #consul_target_group_arn = module.consul.consul_server_target_group_arn
-  #jenkins_target_group_arn = module.jenkins.jenkins_server_target_group_arn
-  #elastic_target_group_arn = module.elastic.elastic_target_group_arn
+  consul_target_group_arn = module.consul.consul_server_target_group_arn
+  jenkins_target_group_arn = module.jenkins.jenkins_server_target_group_arn
+  elastic_target_group_arn = module.elastic.elastic_target_group_arn
  } 
 
 module "jenkins" {
@@ -32,9 +32,9 @@ module "jenkins" {
   availability_zone = var.availability_zone
   ami = var.ami
   region = var.region
-  # consul_iam_instance_profile = module.consul.aws_iam_instance_profile
-  # consul_security_group = module.consul.consul_security_group_id
-  # consul_join_policy_arn= module.consul.consul_join_policy_arn
+  consul_iam_instance_profile = module.consul.aws_iam_instance_profile
+  consul_security_group = module.consul.consul_security_group_id
+  consul_join_policy_arn= module.consul.consul_join_policy_arn
 } 
 
 module "consul" {
@@ -49,14 +49,14 @@ module "consul" {
   region = var.region
 }
 
-# module "k8s" {
-#   source    = "./modules/k8s"
-#   vpc_id = module.networking.vpcid
-#   region = var.region
-#   subnet_ids = module.networking.private_subnet_id
-#   #role_arn  = module.jenkins.jenkins_role_arn
-#   #role_name = module.jenkins.jenkins_role_name
-# }
+module "k8s" {
+  source    = "./modules/k8s"
+  vpc_id = module.networking.vpcid
+  region = var.region
+  subnet_ids = module.networking.private_subnet_id
+  role_arn  = module.jenkins.jenkins_role_arn
+  role_name = module.jenkins.jenkins_role_name
+}
 
  module "elastic" {
   source    = "./modules/elastic"

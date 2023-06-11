@@ -14,8 +14,8 @@ variable "ami" {}
 
 variable "region" {}
 
-#variable "consul_iam_instance_profile" {}
+variable "consul_iam_instance_profile" {}
 
-#variable "consul_security_group" {}
+variable "consul_security_group" {}
 
-#variable consul_join_policy_arn {}
+variable consul_join_policy_arn {}

@@ -18,8 +18,8 @@ variable "ingressrules" {
   default = [80, 443, 22]
 }
 
-#variable "consul_target_group_arn" {}
+variable "consul_target_group_arn" {}
 
-#variable "jenkins_target_group_arn" {}
+variable "jenkins_target_group_arn" {}
 
-#variable "elastic_target_group_arn" {}
+variable "elastic_target_group_arn" {}
