@@ -268,10 +268,10 @@ resource "aws_route53_record" "prometheus_record" {
 #create instance profile
 # !!! !!!
 #####################################
-resource "aws_iam_instance_profile" "web_profile" {
-  name = "web_profile"
-  role = "opsScool_role"
-}
+# resource "aws_iam_instance_profile" "web_profile" {
+#   name = "web_profile"
+#   role = "opsScool_role"
+# }
 ###########################
 # Create Certificate 
 ###########################

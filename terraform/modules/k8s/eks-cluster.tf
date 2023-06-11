@@ -4,11 +4,13 @@ module "eks" {
   cluster_name    = var.eks_cluster_name #local.cluster_name 
   cluster_version = var.kubernetes_version
   subnet_ids      = var.subnet_ids # module.vpc.public_subnets #data.aws_subnets.private_subnets.ids
-  cluster_endpoint_private_access = false 
-  cluster_endpoint_public_access = true 
+  #cluster_endpoint_private_access = false 
+  #cluster_endpoint_public_access = true 
 
   enable_irsa = true
   
+  #kms_key_aliases = ["evgy-uri"]
+  #create_kms_key = false
   tags = {
     Name = "eks-cluster-${var.project_name}"
     env = var.tag_enviroment
@@ -43,11 +45,13 @@ module "eks" {
 }
 
 data "aws_eks_cluster" "eks" {
-  name = module.eks.cluster_id
+  name = module.eks.cluster_name
+  depends_on = [module.eks]
 }
 
 data "aws_eks_cluster_auth" "eks" {
-  name = module.eks.cluster_id
+  name = module.eks.cluster_name
+  depends_on = [module.eks]
 }
 
 module "iam_assumable_role_admin" {
@@ -61,11 +65,11 @@ module "iam_assumable_role_admin" {
   depends_on = [module.eks]
 }
 
-provider "kubernetes" {
-  host                   = data.aws_eks_cluster.eks.endpoint
-  cluster_ca_certificate = base64decode(data.aws_eks_cluster.eks.certificate_authority[0].data)
-  token                  = data.aws_eks_cluster_auth.eks.token
-}
+# provider "kubernetes" {
+#   host                   = data.aws_eks_cluster.eks.endpoint
+#   cluster_ca_certificate = base64decode(data.aws_eks_cluster.eks.certificate_authority[0].data)
+#   token                  = data.aws_eks_cluster_auth.eks.token
+# }
 
 # # add Jenkins IAM role to EKS cluster
 
@@ -85,6 +89,12 @@ module "eks_auth" {
   eks                      = module.eks
   wait_for_cluster_timeout = 300
   map_roles                = local.map_roles
-
+  map_users = [
+    {
+      userarn  = "arn:aws:iam::015098999341:user/evgy"
+      username = "evgy"
+      groups   = ["system:masters"]
+    },
+    ]
   depends_on = [module.eks]
 }

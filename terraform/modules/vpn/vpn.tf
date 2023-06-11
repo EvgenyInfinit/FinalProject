@@ -36,6 +36,7 @@ resource "aws_security_group" "vpn_sg" {
     to_port     = 443
     protocol    = "tcp"
     description = "Allow https"
+    cidr_blocks = ["10.0.0.0/16"]
     /* self        = true */
   }
 
