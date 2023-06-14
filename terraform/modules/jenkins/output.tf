@@ -14,6 +14,6 @@ output "jenkins_role_name" {
   value = aws_iam_role.jenkins-role.name
 }
 
-output "jenkins-server-target-group-arn" {
-    value = aws_alb_target_group.jenkins-server.arn
+output "jenkins_server_target_group_arn" {
+    value = aws_alb_target_group.jenkins_server.arn
 }
