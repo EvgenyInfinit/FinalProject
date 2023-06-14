@@ -6,3 +6,5 @@ terraform.tfstate.backup
 *.tfplan
 *.tfstate*
 *.tfvars
+*.pem
+*.pub

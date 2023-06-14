@@ -27,7 +27,7 @@ variable "project_name" {
 }
 
 variable "eks_cluster_name" {
-  default = "f-project-eks-cluster"
+  default = "f-project-eks-cluster-2"
 }
 
 
