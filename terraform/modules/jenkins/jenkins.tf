@@ -6,7 +6,6 @@ locals {
   java_opts = "JAVA_OPTS='-Djenkins.install.runSetupWizard=false'"
 }
 
-
 resource "aws_security_group" "jenkins" {
   name = local.jenkins_default_name
   vpc_id      = var.vpc_id
@@ -37,9 +36,6 @@ resource "aws_security_group" "jenkins" {
     cidr_blocks = ["0.0.0.0/0"]
     description = "node-exporter"
   }
-
-   
-
   ingress {
     from_port = 22
     to_port = 22
@@ -72,8 +68,6 @@ resource "aws_security_group" "jenkins" {
   }
 }
 
-
-
 ###########################################
 # Create Jenkins server 
 ##########################################
@@ -84,7 +78,7 @@ resource "aws_instance" "jenkins_server" {
   instance_type = "t2.micro"
  # key_name = "${aws_key_pair.jenkins_ec2_key.key_name}"
   key_name = var.server_public_key
-  subnet_id                = element(var.subnet_id, count.index)
+  subnet_id = element(var.subnet_id, count.index)
   tags =        {
                   Name = "Jenkins Server"
                   role = "jenkins_master"

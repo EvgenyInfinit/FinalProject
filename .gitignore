@@ -8,3 +8,5 @@ terraform.tfstate.backup
 *.tfvars
 *.pem
 *.pub
+jenkins_ec2_key
+.DS_Store
