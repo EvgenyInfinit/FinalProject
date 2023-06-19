@@ -12,12 +12,13 @@ echo "Configiring jenkins Server:"
 echo "##########################"
 echo 'download jenkins-cli.jar'
 ssh -i $jenkins_key -o StrictHostKeyChecking=no  ubuntu@$Jenkins_server "curl http://localhost:8080/jnlpJars/jenkins-cli.jar -o jenkins-cli.jar"
-#ssh -i "jenkins_key.pem" -o StrictHostKeyChecking=no  ubuntu@3.15.212.77 "curl http://localhost:8080/jnlpJars/jenkins-cli.jar -o jenkins-cli.jar"
+# "curl http://localhost:8080/jnlpJars/jenkins-cli.jar -o jenkins-cli.jar"
 
 
 echo 'installing plugins'
+#sudo apt install openjdk-11-jre-headless
 ssh -i $jenkins_key  ubuntu@$Jenkins_server "java -jar jenkins-cli.jar -s http://localhost:8080/ -webSocket install-plugin Git GitHub github-branch-source  pipeline-model-extensions build-monitor-plugin pipeline-build-step docker-workflow Swarm -deploy"
-#ssh -i "jenkins_key.pem"  ubuntu@$10.0.6.45 "java -jar jenkins-cli.jar -s http://localhost:8080/ -webSocket install-plugin Git GitHub github-branch-source  pipeline-model-extensions build-monitor-plugin pipeline-build-step docker-workflow Swarm -deploy"
+# java -jar jenkins-cli.jar -s http://localhost:8080/ -webSocket install-plugin Git GitHub github-branch-source  pipeline-model-extensions build-monitor-plugin pipeline-build-step docker-workflow Swarm -deploy
 
 echo 'submit and create jenkins job'
 scp -i $jenkins_key kandulaDeployment.xml ubuntu@$Jenkins_server:~
@@ -31,7 +32,7 @@ echo "Configiring jenkins Node:"
 echo "##########################"
 echo "download node client"
 ssh -i $jenkins_key -o StrictHostKeyChecking=no ubuntu@$jenkins_agent "curl http://$Jenkins_server:8080/swarm/swarm-client.jar -o swarm-client.jar"
-                 #   curl http://10.0.5.238:8080/swarm/swarm-client.jar -o swarm-client.jar
+                 #   curl http://10.0.6.229:8080/swarm/swarm-client.jar -o swarm-client.jar
 
 echo "install kubectl"
 ssh -i $jenkins_key  ubuntu@$jenkins_agent "sudo apt install -y docker.io; sudo usermod -aG docker ubuntu; sudo snap install kubectl --classic; mkdir /home/ubuntu/.kube/"
@@ -51,3 +52,5 @@ ssh -i $jenkins_key  ubuntu@$jenkins_agent "curl -sfL https://raw.githubusercont
 echo "connect node to Jenkins Server"
 ssh -i $jenkins_key  ubuntu@$jenkins_agent "nohup java -jar swarm-client.jar -url http://$Jenkins_server:8080 -webSocket -name node1 -disableClientsUniqueId -retry 1 &"
 
+#curl http://10.0.6.229:8080/swarm/swarm-client.jar -o swarm-client.jar
+#nohup java -jar swarm-client.jar -url http://10.0.6.229:8080 -webSocket -name node1 -disableClientsUniqueId -retry 1 &

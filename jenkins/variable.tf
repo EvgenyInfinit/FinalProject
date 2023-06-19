@@ -8,7 +8,7 @@ variable "vpc_id" {
 variable "subnet_id" {
   description = "ID of the subnet"
   type        = string
-  default     = "subnet-0494136984296dfd5"
+  default     = "subnet-00b6830fdfdc9629a"
 }
 
 variable "availability_zone" {

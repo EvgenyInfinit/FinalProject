@@ -11,3 +11,6 @@ sudo systemctl enable docker
 sudo usermod -aG docker ubuntu
 mkdir -p ${jenkins_home}
 sudo chown -R 1000:1000 ${jenkins_home}
+
+
+curl http://10.0.6.229:8080/swarm/swarm-client.jar -o swarm-client.jar

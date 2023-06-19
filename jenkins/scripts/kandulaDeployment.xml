@@ -8,7 +8,7 @@
       <configVersion>2</configVersion>
       <userRemoteConfigs>
         <hudson.plugins.git.UserRemoteConfig>
-          <url>https://github.com/EvgenyInfinit/kandula-app-9.git</url>
+          <url>https://github.com/EvgenyInfinit/kandula.git</url>
         </hudson.plugins.git.UserRemoteConfig>
       </userRemoteConfigs>
       <branches>

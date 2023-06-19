@@ -108,27 +108,27 @@ resource "aws_instance" "jenkins_server" {
   /* iam_instance_profile = [aws_iam_instance_profile.jenkins-role.name, var.consul_iam_instance_profile] */
   iam_instance_profile =  aws_iam_instance_profile.jenkins-role.name
   #user_data = file("scripts/jenkins_server.tpl") 
-  connection {
-    host = aws_instance.jenkins_server.private_ip
-    user = "ubuntu"
-    private_key = file("jenkins_ec2_key")
-  }
-    provisioner "remote-exec" {
-    inline = [
-      "sudo apt-get update -y",
-      "sudo apt install docker.io -y",
-      "sudo systemctl start docker",
-      "sudo systemctl enable docker",
-      "sudo usermod -aG docker ubuntu",
-      "mkdir -p ${local.jenkins_home}",
-      "sudo chown -R 1000:1000 ${local.jenkins_home}"
-    ]
-  }
-  provisioner "remote-exec" {
-    inline = [
-      "sudo docker run -d --restart=always -p 8080:8080 -p 50000:50000 -v ${local.jenkins_home_mount} -v ${local.docker_sock_mount} --env ${local.java_opts} jenkins/jenkins"
-    ]
-  }
+  # connection {
+  #   host = aws_instance.jenkins_server.private_ip
+  #   user = "ubuntu"
+  #   private_key = file("jenkins_ec2_key")
+  # }
+  #   provisioner "remote-exec" {
+  #   inline = [
+  #     "sudo apt-get update -y",
+  #     "sudo apt install docker.io -y",
+  #     "sudo systemctl start docker",
+  #     "sudo systemctl enable docker",
+  #     "sudo usermod -aG docker ubuntu",
+  #     "mkdir -p ${local.jenkins_home}",
+  #     "sudo chown -R 1000:1000 ${local.jenkins_home}"
+  #   ]
+  # }
+  # provisioner "remote-exec" {
+  #   inline = [
+  #     "sudo docker run -d --restart=always -p 8080:8080 -p 50000:50000 -v ${local.jenkins_home_mount} -v ${local.docker_sock_mount} --env ${local.java_opts} jenkins/jenkins"
+  #   ]
+  # }
 }
  ################
  # ssh
