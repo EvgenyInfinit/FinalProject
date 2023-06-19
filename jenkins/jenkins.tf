@@ -103,13 +103,13 @@ resource "aws_instance" "jenkins_server" {
                   role = "jenkins_master"
                   port = "8080"
                 }
-  associate_public_ip_address       = true
+  associate_public_ip_address       = false
   vpc_security_group_ids = var.vpn_sg #[aws_security_group.jenkins.id,  var.vpn_sg] #, var.consul_security_group]
   /* iam_instance_profile = [aws_iam_instance_profile.jenkins-role.name, var.consul_iam_instance_profile] */
   iam_instance_profile =  aws_iam_instance_profile.jenkins-role.name
   #user_data = file("scripts/jenkins_server.tpl") 
   connection {
-    host = aws_instance.jenkins_server.public_ip
+    host = aws_instance.jenkins_server.private_ip
     user = "ubuntu"
     private_key = file("jenkins_ec2_key")
   }
