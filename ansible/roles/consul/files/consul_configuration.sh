@@ -39,6 +39,7 @@ mv consul /usr/local/bin/consul
 # Setup Consul
 mkdir -p /opt/consul
 mkdir -p /etc/consul.d
+mkdir -p /run/consul
 mkdir -p /var/log/consul
 tee /etc/consul.d/config.json > /dev/null <<EOF
 {
@@ -50,16 +51,14 @@ tee /etc/consul.d/config.json > /dev/null <<EOF
   "disable_update_check": true,
   "leave_on_terminate": true,
   "retry_join": ["provider=aws tag_key=consul_server tag_value=true"],
-  "server": true,
-  "bootstrap_expect": 1,
-  "ui": true,
-  "client_addr": "0.0.0.0"
+  "enable_script_checks": true,
+  "server": false
 }
 EOF
 
 # Create user & grant ownership of folders
-useradd consul
-chown -R consul:consul /opt/consul /etc/consul.d /var/log/consul
+id -u consul  &>/dev/null || useradd consul
+chown -R consul:consul /opt/consul /etc/consul.d /run/consul /var/log/consul
 
 
 # Configure consul service
@@ -72,10 +71,10 @@ After=network.target
 [Service]
 User=consul
 Group=consul
-PIDFile=/opt/consul/consul.pid
+PIDFile=/run/consul/consul.pid
 Restart=on-failure
 Environment=GOMAXPROCS=2
-ExecStart=/usr/local/bin/consul agent -pid-file=/opt/consul/consul.pid -config-dir=/etc/consul.d -log-file=/var/log/consul/
+ExecStart=/usr/local/bin/consul agent -pid-file=/run/consul/consul.pid -config-dir=/etc/consul.d -log-file=/var/log/consul/
 ExecReload=/bin/kill -s HUP $MAINPID
 KillSignal=SIGINT
 TimeoutStopSec=5

@@ -1,11 +1,12 @@
 ---
-- name: configuration for jenkins servers 
+- name: K8S configuration  
   hosts: 
-    _jenkins_master, _jenkins_slave
+    _jenkins_slave
   remote_user: ubuntu
   vars:
      ansible_ssh_private_key_file: "../terraform/keys/jenkins_key.pem"
   roles:
-  - consul
-  - filebeat
-  - node_exporter  
+  - prometheus
+  - k8s_consul
+  - grafana
+  
