@@ -23,5 +23,5 @@ processors:
       when.not.contains.tags: forwarded
   - add_cloud_metadata: ~
 output.elasticsearch:
-  hosts: ["elastic_search.service.consul:9200"]
+  hosts: ["10.0.6.114:9200"] #["elastic_search.service.consul:9200"]
   index: "filebeat-%{[agent.version]}-%{[agent.name]}-%{+yyyy.MM.dd}"
