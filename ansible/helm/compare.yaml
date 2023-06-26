@@ -1,0 +1,23 @@
+global:
+  enabled: false
+  dnsPolicy: "ClusterFirst"
+  datacenter: opsschool
+  gossipEncryption:
+    secretName: consul-gossip-key
+    secretKey: key
+server:
+  replicas: 0 # Set the number of server replicas to 0 to disable the server component
+client:
+  enabled: true
+  exposeGossipPorts: true
+  join:
+    - "provider=aws tag_key=consul_server tag_value=true"
+  nodeMeta:
+    pod-name: ${HOSTNAME}
+    host-ip: ${HOST_IP}
+  dns:
+    enabled: true
+    upstreams:
+      - "consul-consul-dns.consul.svc" # Use consul-consul-dns service for DNS resolution
+connectInject:
+  enabled: true

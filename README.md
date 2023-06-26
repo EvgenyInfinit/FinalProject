@@ -1,12 +1,10 @@
-# FinalProject
-Terraform
+OpsScool Final Project
 
-1 network 
+This is the Infrastracture as a code Repository.
 
-2 jenkins
+Provisioning of the Infrastructure is done with Terraform.
 
-3 vpn 
+Configuration Manafment is implemented with Ansible.
 
-4 consul
+![Image Description](image/image.png)
 
-5 elastic

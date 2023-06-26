@@ -1,0 +1,41 @@
+global:
+  enabled: false
+  dnsPolicy: "ClusterFirst"
+  #image: consul:1.9.2
+  datacenter: opsschool
+  gossipEncryption:
+    secretName: consul-gossip-key
+    secretKey: key
+server:
+  # Specify three servers that wait until all are healthy to bootstrap the Consul cluster.
+   replicas: 1
+# Configure Consul clients in this section
+client:
+  enabled: true
+  # Set this to true to expose the Consul clients using the Kubernetes node
+  # IPs. If false, the pod IPs must be routable from the external servers.
+  exposeGossipPorts: true
+  # Consul Cluster Outside K8S leader IP
+  join:
+    - "provider=aws tag_key=consul_server tag_value=true"
+  nodeMeta:
+    pod-name: ${HOSTNAME}
+    host-ip: ${HOST_IP}
+# dns:
+#   # @type: boolean
+#   enabled: true
+#syncCatalog:
+  # True if you want to enable the catalog sync. Set to "-" to inherit from
+  # global.enabled.
+  #enabled: true
+# Enable Consul connect pod injection
+connectInject:
+  enabled: true
+#   default: true
+#   transparentProxy:
+#     defaultOverwriteProbes: true
+# controller:
+#   enabled: true
+# Enable and configure the Consul UI.
+#ui:
+  #enabled: true

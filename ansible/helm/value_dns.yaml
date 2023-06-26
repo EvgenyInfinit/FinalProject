@@ -1,0 +1,6 @@
+global:
+  agent:
+    dnsConfig:
+      upstreams:
+        - 172.20.153.208
+      

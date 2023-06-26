@@ -1,0 +1,15 @@
+cd /run/
+sudo mkdir consul
+cd consul/
+sudo touch counsul.pid
+sudo chown -R consul:consul /opt/consul /etc/consul.d /run/consul /var/log/consul
+
+
+sudo systemctl restart consul
+sudo systemctl status consul
+
+consul members
+
+
+kubectl version 
+
